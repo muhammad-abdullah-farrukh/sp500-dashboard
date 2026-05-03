@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S&P 500 Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <span class="logo-tag">&#9650;</span>
+    <div>
+      <h1>S&amp;P 500 <span class="accent">Explorer</span></h1>
+      <p class="subtitle">Interactive Market Intelligence Dashboard</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="stat-pill" id="stat-companies">— companies</div>
+    <div class="stat-pill" id="stat-sectors">— sectors</div>
+    <div class="stat-pill" id="stat-mcap">— T mkt cap</div>
+  </div>
+</header>
+
+<!-- INTERACTION LEGEND -->
+<div class="interaction-bar">
+  <span class="ib-label">Interactions:</span>
+  <span class="ib-chip select">&#11044; Select</span>
+  <span class="ib-chip filter">&#9698; Filter</span>
+  <span class="ib-chip encode">&#9670; Encode</span>
+  <span class="ib-chip connect">&#8596; Connect</span>
+  <span class="ib-chip reconfig">&#8645; Reconfigure</span>
+  <span class="ib-chip elaborate">&#9432; Elaborate</span>
+  <span class="ib-chip abstract">&#8853; Abstract</span>
+</div>
+
+<!-- CONTROLS ROW -->
+<section class="controls-row">
+  <!-- FILTER: Sector -->
+  <div class="control-group">
+    <label class="ctrl-label">&#9698; Sector Filter</label>
+    <div class="sector-pills" id="sector-pills"><!-- filled by JS --></div>
+  </div>
+
+  <!-- ENCODE: Color by -->
+  <div class="control-group">
+    <label class="ctrl-label">&#9670; Color Encode</label>
+    <div class="btn-group" id="encode-btns">
+      <button class="enc-btn active" data-enc="sector">Sector</button>
+      <button class="enc-btn" data-enc="revenuegrowth">Rev. Growth</button>
+      <button class="enc-btn" data-enc="perf">Performance</button>
+    </div>
+  </div>
+
+  <!-- RECONFIGURE: Bubble axis -->
+  <div class="control-group">
+    <label class="ctrl-label">&#8645; Y-Axis</label>
+    <div class="btn-group" id="yaxis-btns">
+      <button class="enc-btn active" data-y="Revenuegrowth">Rev. Growth</button>
+      <button class="enc-btn" data-y="Ebitda">EBITDA</button>
+      <button class="enc-btn" data-y="Weight">Index Weight</button>
+    </div>
+  </div>
+
+  <!-- ABSTRACT: Aggregation -->
+  <div class="control-group">
+    <label class="ctrl-label">&#8853; View</label>
+    <div class="btn-group" id="abstract-btns">
+      <button class="enc-btn active" data-view="companies">Companies</button>
+      <button class="enc-btn" data-view="sectors">Sectors</button>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN GRID -->
+<main class="dashboard-grid">
+
+  <!-- BUBBLE CHART (Select + Connect + Encode + Reconfigure + Elaborate) -->
+  <div class="panel panel-bubble" id="panel-bubble">
+    <div class="panel-header">
+      <span class="panel-title">Market Cap vs <span id="y-axis-label">Revenue Growth</span></span>
+      <span class="panel-hint">Click to select · hover for details</span>
+    </div>
+    <svg id="bubble-chart"></svg>
+    <div id="tooltip" class="tooltip hidden"></div>
+  </div>
+
+  <!-- TIME SERIES (Connect + Elaborate + Abstract) -->
+  <div class="panel panel-timeseries" id="panel-ts">
+    <div class="panel-header">
+      <span class="panel-title">S&amp;P 500 Index <span id="ts-stock-label"></span></span>
+      <span class="panel-hint">Brush to zoom · shows selected stock overlay</span>
+    </div>
+    <div class="ts-toggle">
+      <button class="ts-btn active" id="ts-index-btn">Index</button>
+      <button class="ts-btn" id="ts-stock-btn" disabled>Selected Stock</button>
+      <button class="ts-btn" id="ts-both-btn" disabled>Both</button>
+    </div>
+    <svg id="ts-chart"></svg>
+    <div id="ts-tooltip" class="tooltip hidden"></div>
+  </div>
+
+  <!-- SECTOR TREEMAP (Filter + Abstract + Encode) -->
+  <div class="panel panel-treemap" id="panel-treemap">
+    <div class="panel-header">
+      <span class="panel-title">Sector Market Cap Distribution</span>
+      <span class="panel-hint">Click sector to filter</span>
+    </div>
+    <svg id="treemap-chart"></svg>
+  </div>
+
+  <!-- DETAIL PANEL (Elaborate) -->
+  <div class="panel panel-detail" id="panel-detail">
+    <div class="panel-header">
+      <span class="panel-title">&#9432; Company Detail</span>
+    </div>
+    <div id="detail-content" class="detail-placeholder">
+      <div class="detail-icon">&#9670;</div>
+      <p>Click any bubble to see<br/>company details here</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <span>S&amp;P 500 Dataset · 502 Companies · 2020–2024 · Built with D3.js v7</span>
+  <span class="footer-interactions">7 Interaction Types Implemented</span>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>
